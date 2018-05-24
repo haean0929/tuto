@@ -1,0 +1,100 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.io.File;
+import java.io.FileFilter;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+
+public class FileManager extends JFrame{
+	
+	JTree tree;
+	DefaultTreeModel treeModel;
+	DefaultMutableTreeNode root;	
+
+public FileManager() { 
+			super("/home/");
+			root = new DefaultMutableTreeNode("디스크 드라이브(C:)");
+			treeModel = new DefaultTreeModel(root);
+			tree = new JTree(treeModel);
+			
+			JPanel top=new JPanel();
+			JPanel left=new JPanel();
+			JPanel center=new JPanel();
+			JPanel low=new JPanel();
+		
+			//아래쪽
+			
+			JComboBox box=new JComboBox();
+			JLabel labellow=new JLabel("File Exploer");
+			
+			box.addItem("한국어");
+			box.addItem("English");
+			
+			low.setLayout(new BorderLayout());
+			low.add(labellow,BorderLayout.WEST);
+			low.add(box,BorderLayout.EAST);
+			
+			//왼쪽
+			JLabel labeltop=new JLabel("/home/");
+			
+			top.setLayout(new BorderLayout());
+			top.add(labeltop,BorderLayout.WEST);
+			
+			
+			
+			top.setBackground(Color.WHITE);
+			left.setBackground(Color.GRAY);
+			center.setBackground(Color.WHITE);
+			low.setBackground(Color.white);
+			
+			setLayout(new BorderLayout());
+			add(top,BorderLayout.NORTH);
+			add(left,BorderLayout.WEST);
+			add(center,BorderLayout.CENTER);
+			add(low,BorderLayout.SOUTH);
+			
+			
+			setSize(500,300);
+			setVisible(true);
+			setDefaultCloseOperation(EXIT_ON_CLOSE);
+			
+			File dir = new File("C:\\");
+			File[] files = dir.listFiles();
+			FileFilter fileFilter = new FileFilter() {
+				@Override
+				public boolean accept(File file) {
+					return file.isDirectory();
+				}
+			};
+			files = dir.listFiles(fileFilter);
+			if(files.length == 0) {
+				System.out.println("Either dir does not exist or is not a directory");
+			}else {
+				for( int i=0; i<files.length; i++) {
+					File filename = files[i];
+					Object DefaultMutableTreeNode;
+					
+					if(filename.toString().contains("$")||
+						filename.toString().contains("Recovery")||
+						filename.toString().contains("System")||
+						filename.toString().contains("Temp")||
+						filename.toString().contains("PerfLogs"))
+						continue;
+					else
+						treeModel.insertNodeInto(new DefaultMutableTreeNode(filename.toString().substring(3))
+																				,root,0);
+						
+				}
+			}
+		}
+public static void main(String[] args)
+{
+	new FileManager();
+}
+}
+	
